@@ -1,7 +1,7 @@
 # Overwatch 2 Statistics Project
 
 ## Overview
-This project is a web application designed to display Overwatch player statistics and compare hero data. It is currently a work in progress due to limitations with the Overwatch API not updating statistics in real-time.
+This project is a web application designed to display Overwatch 2 player statistics and compare hero data. It is currently abandoned due to limitations with the Overwatch API not updating statistics in real-time.
 
 ## Technologies Used
  - Python
@@ -13,7 +13,7 @@ This project is a web application designed to display Overwatch player statistic
 ## Features
 
 - Profile Search: Users can search for player profiles using their BattleTag to view summary and statistical data.
-- Profile Search Via Battle.net: not fully implemented.
+- Profile Search Via Battle.net auth: not fully implemented.
 - Mini Game: Guess which of two randomly selected Overwatch 2 heroes is older based on their age displayed on their profile.
 
 
