@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}Main Page - OW2Stats{% endblock %}
+
+{% block content %}
+{%load static%}
+<link rel="stylesheet" href="{% static 'css/main_page.css' %}">
+<form method="post" action="{% url 'main_page' %}" class="mb-4">
+    {% csrf_token %}
+    <div class="input-group">
+        <input type="text" name="battle_tag" class="form-control" placeholder="Enter Battle Tag" required>
+        <div class="input-group-append">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </div>
+</form>
+
+{% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+<div class="row justify-content-center">
+    <div class="col-md-6 mb-4">
+        <div class="alert alert-info text-center" role="alert">
+            Guess which character is older by clicking on their name or image below!
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-6 mb-4 text-center">
+        <div class="character-container">
+            <img src="{{ character1_image }}" class="character-icon img-fluid"
+                 alt="{{ character1_name }} Image"
+                 onclick="guess('{{ character1_name }}', '{{ character2_name }}')">
+            <h5 class="character-name">{{ character1_name }}</h5>
+            <p id="character1_age" class="character-age">{{ character1_age }}</p>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4 text-center">
+        <div class="character-container">
+            <img src="{{ character2_image }}" class="character-icon img-fluid"
+                 alt="{{ character2_name }} Image"
+                 onclick="guess('{{ character2_name }}', '{{ character1_name }}')">
+            <h5 class="character-name">{{ character2_name }}</h5>
+            <p id="character2_age" class="character-age">{{ character2_age }}</p>
+        </div>
+    </div>
+</div>
+
+<div id="results">
+    <h3>Result:</h3>
+    <p id="result_message"></p>
+    <p>{{ character1_name }} age: <span id="result_character1_age"></span></p>
+    <p>{{ character2_name }} age: <span id="result_character2_age"></span></p>
+</div>
+
+<script>
+    function guess(selectedCharacter, otherCharacter) {
+        var age1 = parseInt('{{ character1_age }}');
+        var age2 = parseInt('{{ character2_age }}');
+
+        document.getElementById('result_character1_age').innerText = '{{ character1_age }}';
+        document.getElementById('result_character2_age').innerText = '{{ character2_age }}';
+
+        if (selectedCharacter === '{{ character1_name }}') {
+            if (age1 > age2) {
+                displayResult('{{ character1_name }} is older!', 'success');
+            } else {
+                displayResult('{{ character2_name }} is older!', 'error');
+            }
+        } else if (selectedCharacter === '{{ character2_name }}') {
+            if (age2 > age1) {
+                displayResult('{{ character2_name }} is older!', 'success');
+            } else {
+                displayResult('{{ character1_name }} is older!', 'error');
+            }
+        }
+    }
+
+    function displayResult(message, type) {
+        var resultElement = document.getElementById('results');
+        var resultMessageElement = document.getElementById('result_message');
+
+        resultMessageElement.innerText = message;
+
+        if (type === 'success') {
+            resultElement.className = '';
+            resultElement.style.backgroundColor = '#28a745';
+        } else if (type === 'error') {
+            resultElement.className = 'error';
+            resultElement.style.backgroundColor = '#dc3545';
+        }
+
+        resultElement.style.display = 'block';
+    }
+</script>
+{% endblock %}

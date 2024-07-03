@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile Search{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="text-center mb-4">Search Player Statistics</h2>
+
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="post" class="mb-4">
+            {% csrf_token %}
+            <div class="input-group">
+                <input type="text" name="battle_tag" class="form-control" placeholder="Enter Battle Tag" required>
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+
+        {% if player_summary %}
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="{{ player_summary.avatar }}" alt="Avatar" class="img-fluid rounded-circle">
+                        <img src="{{ player_summary.namecard }}" alt="Namecard" class="img-fluid mt-2">
+                        <h4 class="mt-2">{{ player_summary.username }}</h4>
+                        <p>{{ player_summary.title }}</p>
+                        <img src="{{ player_summary.endorsement.frame }}" alt="Endorsement Frame" class="img-fluid">
+                    </div>
+                    <div class="col-md-8">
+                        <h3 class="card-title">Player Summary</h3>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>Competitive PC Statistics (Season {{player_summary.competitive.pc.season}}):</strong>
+                                {% if player_summary.competitive.pc %}
+                                    {% if player_summary.competitive.pc.tank %}
+                                    Tank: Games Played - {{ player_summary.competitive.pc.tank.games_played }}, Winrate - {{ player_summary.competitive.pc.tank.winrate }}%
+                                    Damage: Games Played - {{ player_summary.competitive.pc.damage.games_played }}, Winrate - {{ player_summary.competitive.damage.tank.winrate }}%
+                                    Damage: Games Played - {{ player_summary.competitive.support.damage.games_played }}, Winrate - {{ player_summary.competitive.damage.support.winrate }}%
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                {% else %}
+                                -
+                                {% endif %}
+                            </li>
+                            <li class="list-group-item"><strong>Competitive Console Statistics(Season {{player_summary.competitive.pc.season}}):</strong>
+                                {% if player_summary.competitive.console %}
+                                    {% if player_summary.competitive.console.tank %}
+                                    Tank: Games Played - {{ player_summary.competitive.console.tank.games_played }}, Winrate - {{ player_summary.competitive.console.tank.winrate }}%
+                                    {% else %}
+                                    Tank: -
+                                    {% endif %}
+                                {% else %}
+                                -
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <a href="{% url 'profile_stats' battle_tag=battle_tag %}" class="btn btn-primary mt-3">Show Detailed Statistics</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

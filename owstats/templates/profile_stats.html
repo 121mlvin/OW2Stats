@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile Search{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="text-center mb-4">Search Player Statistics</h2>
+
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="post" class="mb-4">
+            {% csrf_token %}
+            <div class="input-group">
+                <input type="text" name="battle_tag" class="form-control" placeholder="Enter Battle Tag" required>
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+
+        {% if player_stats %}
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Player Statistics for {{ battle_tag }}</h3>
+                <h4>General Statistics</h4>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Games Played:</strong> {{ player_stats.general.games_played }}</li>
+                    <li class="list-group-item"><strong>Games Won:</strong> {{ player_stats.general.games_won }}</li>
+                    <li class="list-group-item"><strong>Games Lost:</strong> {{ player_stats.general.games_lost }}</li>
+                    <li class="list-group-item"><strong>Winrate:</strong> {{ player_stats.general.winrate }}%</li>
+                    <li class="list-group-item"><strong>KDA:</strong> {{ player_stats.general.kda }}</li>
+                    <li class="list-group-item"><strong>Time Played:</strong> {{ player_stats.general.time_played }}</li>
+                    <li class="list-group-item"><strong>Total Assists:</strong> {{ player_stats.general.total.assists }}</li>
+                    <li class="list-group-item"><strong>Total Damage:</strong> {{ player_stats.general.total.damage }}</li>
+                    <li class="list-group-item"><strong>Total Deaths:</strong> {{ player_stats.general.total.deaths }}</li>
+                    <li class="list-group-item"><strong>Total Eliminations:</strong> {{ player_stats.general.total.eliminations }}</li>
+                    <li class="list-group-item"><strong>Total Healing:</strong> {{ player_stats.general.total.healing }}</li>
+                </ul>
+
+                <h4 class="mt-4">Hero Statistics</h4>
+                <ul class="list-group list-group-flush">
+                    {% for hero, stats in player_stats.heroes.items %}
+                    <li class="list-group-item"><strong>{{ hero|title }}:</strong>
+                        {% if stats.games_played %}
+                            Games Played: {{ stats.games_played }}, Winrate: {{ stats.winrate }}%
+                        {% else %}
+                            No data available
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+
+                <h4 class="mt-4">Role Statistics</h4>
+                <ul class="list-group list-group-flush">
+                    {% for role, stats in player_stats.roles.items %}
+                    <li class="list-group-item"><strong>{{ role|title }}:</strong>
+                        {% if stats.games_played %}
+                            Games Played: {{ stats.games_played }}, Winrate: {{ stats.winrate }}%
+                        {% else %}
+                            No data available
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
